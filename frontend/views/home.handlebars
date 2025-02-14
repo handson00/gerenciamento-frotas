@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Gerenciamento de Frotas</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <h1>Bem-vindo à Plataforma de Gerenciamento de Frotas</h1>
+
+  <h2>Usuários</h2>
+  <ul>
+    {{#each usuarios}}
+      <li>{{nome}} - {{email}}</li>
+    {{/each}}
+  </ul>
+
+  <h2>Veículos</h2>
+  <ul>
+    {{#each veiculos}}
+      <li>{{modelo}} - {{placa}}</li>
+    {{/each}}
+  </ul>
+
+  <h2>Motoristas</h2>
+  <ul>
+    {{#each motoristas}}
+      <li>{{nome}} - {{categoria}}</li>
+    {{/each}}
+  </ul>
+
+  <h2>Manutenções</h2>
+  <ul>
+    {{#each manutencao}}
+      <li>{{descricao}} - {{data}}</li>
+    {{/each}}
+  </ul>
+
+  <a href="/usuarios">Cadastrar Usuário</a>
+  <a href="/veiculos">Cadastrar Veículo</a>
+  <a href="/motoristas">Cadastrar Motorista</a>
+  <a href="/viagens">Cadastrar Viagem</a>
+  <a href="/manutencao">Cadastrar Manutenção</a>
+</body>
+</html>

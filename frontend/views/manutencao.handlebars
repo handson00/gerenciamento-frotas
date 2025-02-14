@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Manutenções - Plataforma de Gerenciamento de Frotas</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <h1>Cadastro de Manutenção</h1>
+
+  <form action="/manutencao" method="POST">
+    <div>
+      <label for="descricao">Descrição:</label>
+      <input type="text" name="descricao" id="descricao" required>
+    </div>
+    <div>
+      <label for="data">Data:</label>
+      <input type="date" name="data" id="data" required>
+    </div>
+    <button type="submit">Cadastrar Manutenção</button>
+  </form>
+
+  <h2>Manutenções Realizadas</h2>
+  <ul>
+    {{#each manutencao}}
+      <li>{{descricao}} - {{data}}</li>
+    {{/each}}
+  </ul>
+</body>
+</html>
