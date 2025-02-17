@@ -14,9 +14,14 @@ const app = express();
 const port = 8080;
 
 // Configuração do Handlebars
-app.engine('handlebars', handlebars.engine());
-app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views')); // Garante que as views estão na pasta correta
+app.engine(
+    'handlebars',
+    handlebars.engine({
+        defaultLayout: 'main', // Nome do layout principal
+        layoutsDir: path.join(__dirname, 'frontend/views/layouts'), // Diretório de layouts
+    })
+);
+app.set('view engine', 'handlebars'); // Garante que as views estão na pasta correta
 
 // Middleware para manipulação de dados de formulários
 app.use(express.json());
@@ -30,7 +35,7 @@ app.use('/viagens', viagemRoutes);
 app.use('/manutencao', manutencaoRoutes);
 
 // Serve arquivos estáticos (CSS, JS)
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'frontend/public')));
 
 // Página inicial
 app.get('/', (req, res) => {
