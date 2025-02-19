@@ -1,38 +1,65 @@
-// controllers/usuarioController.js
+const Usuario = require('../models/usuario');
 
-const db = require('../config/db');
-
-// Função para listar usuários
-exports.listarUsuarios = (req, res) => {
-    db.query('SELECT * FROM usuarios', (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao buscar usuários');
-        }
-        res.render('home', { usuarios: results });
-    });
+exports.listarUsuarios = async (req, res) => {
+    try {
+        const usuarios = await Usuario.findAll();
+        res.render('usuarios', { usuarios });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao buscar usuários');
+        res.redirect('/');
+    }
 };
 
-// Função para criar um usuário
 exports.cadastrarUsuario = (req, res) => {
-    const { nome, email, senha } = req.body;
-    db.query('INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)', [nome, email, senha], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao cadastrar usuário');
-        }
-        res.redirect('/');
-    });
+    res.render('cadastrarUsuario');
 };
 
-// Função para excluir um usuário
-exports.excluirUsuario = (req, res) => {
-    const { id } = req.params;
-    db.query('DELETE FROM usuarios WHERE id = ?', [id], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao excluir usuário');
+exports.salvarUsuario = async (req, res) => {
+    const { nome, email, senha } = req.body;
+    try {
+        await Usuario.create({ nome, email, senha });
+        req.flash('success_msg', 'Usuário cadastrado com sucesso');
+        res.redirect('/usuarios');
+    } catch (err) {
+        console.error(err);
+        req.flash('error_msg', 'Erro ao cadastrar usuário');
+        res.redirect('/usuarios/cadastrar');
+    }
+};
+
+exports.editarUsuario = async (req, res) => {
+    try {
+        const usuario = await Usuario.findByPk(req.params.id);
+        if (!usuario) {
+            req.flash('error_msg', 'Usuário não encontrado');
+            return res.redirect('/usuarios');
         }
-        res.redirect('/');
-    });
+        res.render('editarUsuario', { usuario });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao buscar usuário');
+        res.redirect('/usuarios');
+    }
+};
+
+exports.atualizarUsuario = async (req, res) => {
+    const { nome, email, senha } = req.body;
+    try {
+        await Usuario.update({ nome, email, senha }, { where: { id: req.params.id } });
+        req.flash('success_msg', 'Usuário atualizado com sucesso');
+        res.redirect('/usuarios');
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao atualizar usuário');
+        res.redirect('/usuarios/editar/' + req.params.id);
+    }
+};
+
+exports.excluirUsuario = async (req, res) => {
+    try {
+        await Usuario.destroy({ where: { id: req.params.id } });
+        req.flash('success_msg', 'Usuário excluído com sucesso');
+        res.redirect('/usuarios');
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao excluir usuário');
+        res.redirect('/usuarios');
+    }
 };

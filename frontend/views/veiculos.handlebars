@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Veículos</title>
+    <!-- Incluir o CSS do Bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="text-center">Gerenciamento de Veículos</h1>
+            <a href="javascript:history.back()" class="btn btn-secondary">Voltar</a>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Cadastrar Novo Veículo</h2>
+            </div>
+            <div class="card-body">
+                <form action="/veiculos" method="POST">
+                    <div class="mb-3">
+                        <label for="modelo" class="form-label">Modelo:</label>
+                        <input type="text" id="modelo" name="modelo" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="placa" class="form-label">Placa:</label>
+                        <input type="text" id="placa" name="placa" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status:</label>
+                        <select id="status" name="status" class="form-control" required>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Finalizado">Finalizado</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cadastrar Veículo</button>
+                </form>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Lista de Veículos</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Modelo</th>
+                            <th>Placa</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each veiculos}}
+                        <tr>
+                            <td>{{this.id}}</td>
+                            <td>{{this.modelo}}</td>
+                            <td>{{this.placa}}</td>
+                            <td>{{this.status}}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editarModal-{{this.id}}">Editar</button>
+                                <form action="/veiculos/excluir/{{this.id}}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Modal para editar veículo -->
+                        <div class="modal fade" id="editarModal-{{this.id}}" tabindex="-1" aria-labelledby="editarModalLabel-{{this.id}}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editarModalLabel-{{this.id}}">Editar Veículo</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/veiculos/editar/{{this.id}}" method="POST">
+                                            <div class="mb-3">
+                                                <label for="modelo-{{this.id}}" class="form-label">Modelo:</label>
+                                                <input type="text" id="modelo-{{this.id}}" name="modelo" class="form-control" value="{{this.modelo}}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="placa-{{this.id}}" class="form-label">Placa:</label>
+                                                <input type="text" id="placa-{{this.id}}" name="placa" class="form-control" value="{{this.placa}}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="status-{{this.id}}" class="form-label">Status:</label>
+                                                <select id="status-{{this.id}}" name="status" class="form-control" required>
+                                                    <option value="Em Andamento" {{#if (eq this.status "Em Andamento")}}selected{{/if}}>Em Andamento</option>
+                                                    <option value="Finalizado" {{#if (eq this.status "Finalizado")}}selected{{/if}}>Finalizado</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">Salvar Alterações</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Incluir o JS do Bootstrap e suas dependências -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

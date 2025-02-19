@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Viagens</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Viagens</h1>
+        <a href="/viagens/cadastrar" class="btn btn-primary">Cadastrar Viagem</a>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Destino</th>
+                    <th>Data Saída</th>
+                    <th>Data Retorno</th>
+                    <th>Status</th>
+                    <th>Veículo</th>
+                    <th>Motorista</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each viagens}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.destino}}</td>
+                    <td>{{this.data_saida}}</td>
+                    <td>{{this.data_retorno}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this.veiculo.modelo}}</td>
+                    <td>{{this.motorista.nome}}</td>
+                    <td>
+                        <a href="/viagens/editar/{{this.id}}" class="btn btn-warning">Editar</a>
+                        <form action="/viagens/excluir/{{this.id}}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,28 +1,30 @@
-// models/usuario.js
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const bcrypt = require('bcryptjs');
 
-const db = require('../database');
-
-const Usuario = {
-  // Criar um novo usuário
-  criar: async (nome, email, senha) => {
-    const query = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
-    const [result] = await db.execute(query, [nome, email, senha]);
-    return result;
-  },
-
-  // Encontrar um usuário pelo email
-  encontrarPorEmail: async (email) => {
-    const query = 'SELECT * FROM usuarios WHERE email = ?';
-    const [rows] = await db.execute(query, [email]);
-    return rows[0];
-  },
-
-  // Obter todos os usuários
-  todos: async () => {
-    const query = 'SELECT * FROM usuarios';
-    const [rows] = await db.execute(query);
-    return rows;
-  },
-};
+const Usuario = sequelize.define('Usuario', {
+    nome: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    senha: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+}, {
+    tableName: 'usuarios',
+    timestamps: false,
+    hooks: {
+        beforeCreate: async (usuario) => {
+            const salt = await bcrypt.genSalt(10);
+            usuario.senha = await bcrypt.hash(usuario.senha, salt);
+        },
+    },
+});
 
 module.exports = Usuario;

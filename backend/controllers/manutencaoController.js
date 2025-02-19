@@ -1,38 +1,74 @@
-// controllers/manutencaoController.js
+const Manutencao = require('../models/manutencao');
+const Veiculo = require('../models/veiculo');
 
-const db = require('../config/db');
-
-// Função para listar manutenções
-exports.listarManutencao = (req, res) => {
-    db.query('SELECT * FROM manutencao', (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao buscar manutenções');
-        }
-        res.render('manutencao', { manutencao: results });
-    });
+exports.listarManutencoes = async (req, res) => {
+    try {
+        const manutencoes = await Manutencao.findAll({
+            include: [Veiculo]
+        });
+        res.render('manutencoes', { manutencoes });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao buscar manutenções');
+        res.redirect('/');
+    }
 };
 
-// Função para criar uma manutenção
-exports.cadastrarManutencao = (req, res) => {
-    const { descricao, data } = req.body;
-    db.query('INSERT INTO manutencao (descricao, data) VALUES (?, ?)', [descricao, data], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao cadastrar manutenção');
-        }
-        res.redirect('/manutencao');
-    });
+exports.cadastrarManutencao = async (req, res) => {
+    try {
+        const veiculos = await Veiculo.findAll();
+        res.render('cadastrarManutencao', { veiculos });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao buscar dados para cadastro');
+        res.redirect('/manutencoes');
+    }
 };
 
-// Função para excluir uma manutenção
-exports.excluirManutencao = (req, res) => {
-    const id = req.params.id;
-    db.query('DELETE FROM manutencao WHERE id = ?', [id], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao excluir manutenção');
+exports.salvarManutencao = async (req, res) => {
+    const { descricao, data, custo, veiculo_id } = req.body;
+    try {
+        await Manutencao.create({ descricao, data, custo, veiculo_id });
+        req.flash('success_msg', 'Manutenção cadastrada com sucesso');
+        res.redirect('/manutencoes');
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao cadastrar manutenção');
+        res.redirect('/manutencoes/cadastrar');
+    }
+};
+
+exports.editarManutencao = async (req, res) => {
+    try {
+        const manutencao = await Manutencao.findByPk(req.params.id);
+        const veiculos = await Veiculo.findAll();
+        if (!manutencao) {
+            req.flash('error_msg', 'Manutenção não encontrada');
+            return res.redirect('/manutencoes');
         }
-        res.redirect('/manutencao');
-    });
+        res.render('editarManutencao', { manutencao, veiculos });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao buscar manutenção');
+        res.redirect('/manutencoes');
+    }
+};
+
+exports.atualizarManutencao = async (req, res) => {
+    const { descricao, data, custo, veiculo_id } = req.body;
+    try {
+        await Manutencao.update({ descricao, data, custo, veiculo_id }, { where: { id: req.params.id } });
+        req.flash('success_msg', 'Manutenção atualizada com sucesso');
+        res.redirect('/manutencoes');
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao atualizar manutenção');
+        res.redirect('/manutencoes/editar/' + req.params.id);
+    }
+};
+
+exports.excluirManutencao = async (req, res) => {
+    try {
+        await Manutencao.destroy({ where: { id: req.params.id } });
+        req.flash('success_msg', 'Manutenção excluída com sucesso');
+        res.redirect('/manutencoes');
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao excluir manutenção');
+        res.redirect('/manutencoes');
+    }
 };

@@ -1,38 +1,64 @@
-// controllers/motoristaController.js
+const Motorista = require('../models/motorista');
 
-const db = require('../config/db');
-
-// Função para listar motoristas
-exports.listarMotoristas = (req, res) => {
-    db.query('SELECT * FROM motoristas', (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao buscar motoristas');
-        }
-        res.render('motorista', { motoristas: results });
-    });
+exports.listarMotoristas = async (req, res) => {
+    try {
+        const motoristas = await Motorista.findAll();
+        res.render('motoristas', { motoristas });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao buscar motoristas');
+        res.redirect('/');
+    }
 };
 
-// Função para criar um motorista
 exports.cadastrarMotorista = (req, res) => {
-    const { nome, categoria } = req.body;
-    db.query('INSERT INTO motoristas (nome, categoria) VALUES (?, ?)', [nome, categoria], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao cadastrar motorista');
-        }
-        res.redirect('/motoristas');
-    });
+    res.render('cadastrarMotorista');
 };
 
-// Função para excluir um motorista
-exports.excluirMotorista = (req, res) => {
-    const motoristaId = req.params.id;
-    db.query('DELETE FROM motoristas WHERE id = ?', [motoristaId], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Erro ao excluir motorista');
-        }
+exports.salvarMotorista = async (req, res) => {
+    const { nome, cnh, validade_cnh } = req.body;
+    try {
+        await Motorista.create({ nome, cnh, validade_cnh });
+        req.flash('success_msg', 'Motorista cadastrado com sucesso');
         res.redirect('/motoristas');
-    });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao cadastrar motorista');
+        res.redirect('/motoristas/cadastrar');
+    }
+};
+
+exports.editarMotorista = async (req, res) => {
+    try {
+        const motorista = await Motorista.findByPk(req.params.id);
+        if (!motorista) {
+            req.flash('error_msg', 'Motorista não encontrado');
+            return res.redirect('/motoristas');
+        }
+        res.render('editarMotorista', { motorista });
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao buscar motorista');
+        res.redirect('/motoristas');
+    }
+};
+
+exports.atualizarMotorista = async (req, res) => {
+    const { nome, cnh, validade_cnh } = req.body;
+    try {
+        await Motorista.update({ nome, cnh, validade_cnh }, { where: { id: req.params.id } });
+        req.flash('success_msg', 'Motorista atualizado com sucesso');
+        res.redirect('/motoristas');
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao atualizar motorista');
+        res.redirect('/motoristas/editar/' + req.params.id);
+    }
+};
+
+exports.excluirMotorista = async (req, res) => {
+    try {
+        await Motorista.destroy({ where: { id: req.params.id } });
+        req.flash('success_msg', 'Motorista excluído com sucesso');
+        res.redirect('/motoristas');
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao excluir motorista');
+        res.redirect('/motoristas');
+    }
 };

@@ -1,13 +1,24 @@
-// routes/viagemRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const viagemController = require('../controllers/viagemController');
+const { ensureAuthenticated } = require('../middleware/auth');
 
-// Rota para listar viagens
-router.get('/', viagemController.listarViagens);
+// Exibir todas as viagens
+router.get('/', ensureAuthenticated, viagemController.listarViagens);
 
-// Rota para cadastrar viagem
-router.post('/', viagemController.cadastrarViagem);
+// Página de cadastro de viagem
+router.get('/cadastrar', ensureAuthenticated, viagemController.cadastrarViagem);
+
+// Cadastrar nova viagem
+router.post('/cadastrar', ensureAuthenticated, viagemController.salvarViagem);
+
+// Página de edição de viagem
+router.get('/editar/:id', ensureAuthenticated, viagemController.editarViagem);
+
+// Editar viagem
+router.post('/editar/:id', ensureAuthenticated, viagemController.atualizarViagem);
+
+// Excluir viagem
+router.post('/excluir/:id', ensureAuthenticated, viagemController.excluirViagem);
 
 module.exports = router;

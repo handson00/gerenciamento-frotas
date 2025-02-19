@@ -1,35 +1,27 @@
-// models/manutencao.js
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const Veiculo = require('./veiculo');
 
-const db = require('../database');
+const Manutencao = sequelize.define('Manutencao', {
+    descricao: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    data: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    custo: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    }
+}, {
+    tableName: 'manutencoes',
+    timestamps: false // Desativar timestamps
+});
 
-const Manutencao = {
-  // Criar uma nova manutenção
-  criar: async (descricao, data) => {
-    const query = 'INSERT INTO manutencao (descricao, data) VALUES (?, ?)';
-    const [result] = await db.execute(query, [descricao, data]);
-    return result;
-  },
-
-  // Obter todas as manutenções
-  todas: async () => {
-    const query = 'SELECT * FROM manutencao';
-    const [rows] = await db.execute(query);
-    return rows;
-  },
-
-  // Atualizar uma manutenção
-  atualizar: async (id, descricao, data) => {
-    const query = 'UPDATE manutencao SET descricao = ?, data = ? WHERE id = ?';
-    const [result] = await db.execute(query, [descricao, data, id]);
-    return result;
-  },
-
-  // Excluir uma manutenção
-  excluir: async (id) => {
-    const query = 'DELETE FROM manutencao WHERE id = ?';
-    const [result] = await db.execute(query, [id]);
-    return result;
-  },
-};
+// Definindo as associações
+Manutencao.belongsTo(Veiculo, { foreignKey: 'veiculo_id' });
+Veiculo.hasMany(Manutencao, { foreignKey: 'veiculo_id' });
 
 module.exports = Manutencao;

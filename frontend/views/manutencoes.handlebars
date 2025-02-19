@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Manutenções</title>
+    <!-- Incluir o CSS do Bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Gerenciamento de Manutenções</h1>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Cadastrar Nova Manutenção</h2>
+            </div>
+            <div class="card-body">
+                <form action="/manutencoes" method="POST">
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição:</label>
+                        <input type="text" id="descricao" name="descricao" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data" class="form-label">Data:</label>
+                        <input type="date" id="data" name="data" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="custo" class="form-label">Custo:</label>
+                        <input type="number" step="0.01" id="custo" name="custo" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="veiculo_id" class="form-label">Veículo:</label>
+                        <select id="veiculo_id" name="veiculo_id" class="form-control" required>
+                            {{#each veiculos}}
+                            <option value="{{this.id}}">{{this.modelo}} - {{this.placa}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cadastrar Manutenção</button>
+                </form>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Lista de Manutenções</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descrição</th>
+                            <th>Data</th>
+                            <th>Custo</th>
+                            <th>Veículo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each manutencoes}}
+                        <tr>
+                            <td>{{this.id}}</td>
+                            <td>{{this.descricao}}</td>
+                            <td>{{this.data}}</td>
+                            <td>{{this.custo}}</td>
+                            <td>{{this.Veiculo.modelo}} - {{this.Veiculo.placa}}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editarModal-{{this.id}}">Editar</button>
+                                <form action="/manutencoes/excluir/{{this.id}}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Modal para editar manutenção -->
+                        <div class="modal fade" id="editarModal-{{this.id}}" tabindex="-1" aria-labelledby="editarModalLabel-{{this.id}}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editarModalLabel-{{this.id}}">Editar Manutenção</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/manutencoes/editar/{{this.id}}" method="POST">
+                                            <div class="mb-3">
+                                                <label for="descricao-{{this.id}}" class="form-label">Descrição:</label>
+                                                <input type="text" id="descricao-{{this.id}}" name="descricao" class="form-control" value="{{this.descricao}}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="data-{{this.id}}" class="form-label">Data:</label>
+                                                <input type="date" id="data-{{this.id}}" name="data" class="form-control" value="{{this.data}}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="custo-{{this.id}}" class="form-label">Custo:</label>
+                                                <input type="number" step="0.01" id="custo-{{this.id}}" name="custo" class="form-control" value="{{this.custo}}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="veiculo_id-{{this.id}}" class="form-label">Veículo:</label>
+                                                <select id="veiculo_id-{{this.id}}" name="veiculo_id" class="form-control" required>
+                                                    {{#each ../veiculos}}
+                                                    <option value="{{this.id}}" {{#if (eq ../veiculo_id this.id)}}selected{{/if}}>{{this.modelo}} - {{this.placa}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">Salvar Alterações</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Incluir o JS do Bootstrap e suas dependências -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

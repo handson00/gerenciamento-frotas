@@ -1,46 +1,40 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Gerenciamento de Frotas</title>
-  <link rel="stylesheet" href="/frontend/public/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <!-- Incluir o CSS do Bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
-  <h1>Bem-vindo à Plataforma de Gerenciamento de Frotas</h1>
-
-  <h2>Usuários</h2>
-  <ul>
-    {{#each usuarios}}
-      <li>{{nome}} - {{email}}</li>
-    {{/each}}
-  </ul>
-
-  <h2>Veículos</h2>
-  <ul>
-    {{#each veiculos}}
-      <li>{{modelo}} - {{placa}}</li>
-    {{/each}}
-  </ul>
-
-  <h2>Motoristas</h2>
-  <ul>
-    {{#each motoristas}}
-      <li>{{nome}} - {{categoria}}</li>
-    {{/each}}
-  </ul>
-
-  <h2>Manutenções</h2>
-  <ul>
-    {{#each manutencao}}
-      <li>{{descricao}} - {{data}}</li>
-    {{/each}}
-  </ul>
-
-  <a href="/usuarios">Cadastrar Usuário</a>
-  <a href="/veiculos">Cadastrar Veículo</a>
-  <a href="/motoristas">Cadastrar Motorista</a>
-  <a href="/viagens">Cadastrar Viagem</a>
-  <a href="/manutencao">Cadastrar Manutenção</a>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mt-5">
+            <h1>Bem-vindo!</h1>
+            <a href="/logout" class="btn btn-danger">Sair</a>
+        </div>
+        <div class="mt-3">
+            <h2>Gerenciamento de Veículos</h2>
+            <a href="/veiculos" class="btn btn-primary">Gerenciar Veículos</a>
+        </div>
+        <div class="mt-3">
+            <h2>Gerenciamento de Motoristas</h2>
+            <a href="/motoristas" class="btn btn-primary">Gerenciar Motoristas</a>
+        </div>
+        <div class="mt-3">
+            <h2>Gerenciamento de Viagens</h2>
+            <a href="/viagens" class="btn btn-primary">Gerenciar Viagens</a>
+        </div>
+        <div class="mt-3">
+            <h2>Gerenciamento de Usuários</h2>
+            <a href="/usuarios" class="btn btn-primary">Gerenciar Usuários</a>
+        </div>
+        <div class="mt-3">
+            <h2>Gerenciamento de Manutenções</h2>
+            <a href="/manutencoes" class="btn btn-primary">Gerenciar Manutenções</a>
+        </div>
+    </div>
+    <!-- Incluir o JS do Bootstrap e suas dependências -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
