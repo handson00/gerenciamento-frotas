@@ -2,10 +2,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const path = require('path');
 const session = require('express-session');
-const flash = require('connect-flash');
-const passport = require('passport');
 require('dotenv').config(); // Carregar variáveis de ambiente
-require('./backend/config/passport')(passport); // Configuração do Passport
 
 const usuarioRoutes = require('./backend/routes/usuarioRoutes');
 const veiculoRoutes = require('./backend/routes/veiculoRoutes');
@@ -46,21 +43,6 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
-
-// Inicializar o Passport.js
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Conectar flash para mensagens flash
-app.use(flash());
-
-// Middleware para mensagens flash
-app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    next();
-});
 
 // Roteamento
 app.use('/usuarios', usuarioRoutes);

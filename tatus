@@ -1,7 +1,0 @@
-[33m46d6e4f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31mupstream/main[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to HEAD
-[33m46d6e4f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31mupstream/main[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: reset: moving to upstream/main
-[33ma39c0be[m HEAD@{2}: checkout: moving from main to main
-[33ma39c0be[m HEAD@{3}: checkout: moving from main to main
-[33ma39c0be[m HEAD@{4}: commit: atualização 2
-[33m8d5c959[m HEAD@{5}: commit: atualização
-[33m46d6e4f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31mupstream/main[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{6}: clone: from https://github.com/handson00/gerenciamento-frotas.git

@@ -1,64 +1,51 @@
 const Motorista = require('../models/motorista');
 
+// Função para listar motoristas
 exports.listarMotoristas = async (req, res) => {
     try {
         const motoristas = await Motorista.findAll();
         res.render('motoristas', { motoristas });
     } catch (err) {
-        req.flash('error_msg', 'Erro ao buscar motoristas');
-        res.redirect('/');
+        console.error(err);
+        res.status(500).send('Erro ao buscar motoristas');
     }
 };
 
-exports.cadastrarMotorista = (req, res) => {
-    res.render('cadastrarMotorista');
-};
-
-exports.salvarMotorista = async (req, res) => {
+// Função para criar um motorista
+exports.cadastrarMotorista = async (req, res) => {
     const { nome, cnh, validade_cnh } = req.body;
     try {
         await Motorista.create({ nome, cnh, validade_cnh });
-        req.flash('success_msg', 'Motorista cadastrado com sucesso');
         res.redirect('/motoristas');
     } catch (err) {
-        req.flash('error_msg', 'Erro ao cadastrar motorista');
-        res.redirect('/motoristas/cadastrar');
+        console.error(err);
+        res.status(500).send('Erro ao cadastrar motorista');
     }
 };
 
+// Função para editar um motorista
 exports.editarMotorista = async (req, res) => {
-    try {
-        const motorista = await Motorista.findByPk(req.params.id);
-        if (!motorista) {
-            req.flash('error_msg', 'Motorista não encontrado');
-            return res.redirect('/motoristas');
-        }
-        res.render('editarMotorista', { motorista });
-    } catch (err) {
-        req.flash('error_msg', 'Erro ao buscar motorista');
-        res.redirect('/motoristas');
-    }
-};
-
-exports.atualizarMotorista = async (req, res) => {
+    const motoristaId = req.params.id;
     const { nome, cnh, validade_cnh } = req.body;
     try {
-        await Motorista.update({ nome, cnh, validade_cnh }, { where: { id: req.params.id } });
-        req.flash('success_msg', 'Motorista atualizado com sucesso');
+        await Motorista.update({ nome, cnh, validade_cnh }, {
+            where: { id: motoristaId }
+        });
         res.redirect('/motoristas');
     } catch (err) {
-        req.flash('error_msg', 'Erro ao atualizar motorista');
-        res.redirect('/motoristas/editar/' + req.params.id);
+        console.error(err);
+        res.status(500).send('Erro ao editar motorista');
     }
 };
 
+// Função para excluir um motorista
 exports.excluirMotorista = async (req, res) => {
+    const motoristaId = req.params.id;
     try {
-        await Motorista.destroy({ where: { id: req.params.id } });
-        req.flash('success_msg', 'Motorista excluído com sucesso');
+        await Motorista.destroy({ where: { id: motoristaId } });
         res.redirect('/motoristas');
     } catch (err) {
-        req.flash('error_msg', 'Erro ao excluir motorista');
-        res.redirect('/motoristas');
+        console.error(err);
+        res.status(500).send('Erro ao excluir motorista');
     }
 };

@@ -1,49 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciamento de Viagens</title>
+    <!-- Incluir o CSS do Bootstrap -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Viagens</h1>
-        <a href="/viagens/cadastrar" class="btn btn-primary">Cadastrar Viagem</a>
-        <table class="table mt-4">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Destino</th>
-                    <th>Data Saída</th>
-                    <th>Data Retorno</th>
-                    <th>Status</th>
-                    <th>Veículo</th>
-                    <th>Motorista</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each viagens}}
-                <tr>
-                    <td>{{this.id}}</td>
-                    <td>{{this.destino}}</td>
-                    <td>{{this.data_saida}}</td>
-                    <td>{{this.data_retorno}}</td>
-                    <td>{{this.status}}</td>
-                    <td>{{this.veiculo.modelo}}</td>
-                    <td>{{this.motorista.nome}}</td>
-                    <td>
-                        <a href="/viagens/editar/{{this.id}}" class="btn btn-warning">Editar</a>
-                        <form action="/viagens/excluir/{{this.id}}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-danger">Excluir</button>
-                        </form>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="text-center">Gerenciamento de Viagens</h1>
+            <a href="javascript:history.back()" class="btn btn-secondary">Voltar</a>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Cadastrar Nova Viagem</h2>
+            </div>
+            <div class="card-body">
+                <form action="/viagens" method="POST">
+                    <div class="mb-3">
+                        <label for="destino" class="form-label">Destino:</label>
+                        <input type="text" id="destino" name="destino" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data_saida" class="form-label">Data de Saída:</label>
+                        <input type="date" id="data_saida" name="data_saida" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data_retorno" class="form-label">Data de Retorno:</label>
+                        <input type="date" id="data_retorno" name="data_retorno" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="veiculo_id" class="form-label">Veículo:</label>
+                        <select id="veiculo_id" name="veiculo_id" class="form-control" required>
+                            {{#each veiculos}}
+                            <option value="{{this.id}}">{{this.modelo}} - {{this.placa}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="motorista_id" class="form-label">Motorista:</label>
+                        <select id="motorista_id" name="motorista_id" class="form-control" required>
+                            {{#each motoristas}}
+                            <option value="{{this.id}}">{{this.nome}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status:</label>
+                        <select id="status" name="status" class="form-control" required>
+                            <option value="Planejada">Planejada</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Finalizada">Finalizada</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cadastrar Viagem</button>
+                </form>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Lista de Viagens</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Destino</th>
+                            <th>Data de Saída</th>
+                            <th>Data de Retorno</th>
+                            <th>Veículo</th>
+                            <th>Motorista</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each viagens}}
+                        <tr>
+                            <td>{{this.id}}</td>
+                            <td>{{this.destino}}</td>
+                            <td>{{this.data_saida}}</td>
+                            <td>{{this.data_retorno}}</td>
+                            <td>{{this.Veiculo.modelo}} - {{this.Veiculo.placa}}</td>
+                            <td>{{this.Motorista.nome}}</td>
+                            <td>{{this.status}}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editarModal-{{this.id}}">Editar</button>
+                                <form action="/viagens/excluir/{{this.id}}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Modal para editar viagem -->
+                        <div class="modal fade" id="editarModal-{{this.id}}" tabindex="-1" aria-labelledby="editarModalLabel-{{this.id}}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editarModalLabel-{{this.id}}">Editar Viagem</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/viagens/editar/{{this.id}}" method="POST">
+                                            <div class="mb-3">
+                                                <label for="destino-{{this.id}}" class="form-label">Destino:</label>
+                                                <input type="text" id="destino-{{this.id}}" name="destino" class="form-control" value="{{this.destino}}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="data_saida-{{this.id}}" class="form-label">Data de Saída:</label>
+                                                <input type="date" id="data_saida-{{this.id}}" name="data_saida" class="form-control" value="{{this.data_saida}}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="data_retorno-{{this.id}}" class="form-label">Data de Retorno:</label>
+                                                <input type="date" id="data_retorno-{{this.id}}" name="data_retorno" class="form-control" value="{{this.data_retorno}}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="veiculo_id-{{this.id}}" class="form-label">Veículo:</label>
+                                                <select id="veiculo_id-{{this.id}}" name="veiculo_id" class="form-control" required>
+                                                    {{#each ../veiculos}}
+                                                    <option value="{{this.id}}" {{#if (eq ../veiculo_id this.id)}}selected{{/if}}>{{this.modelo}} - {{this.placa}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="motorista_id-{{this.id}}" class="form-label">Motorista:</label>
+                                                <select id="motorista_id-{{this.id}}" name="motorista_id" class="form-control" required>
+                                                    {{#each ../motoristas}}
+                                                    <option value="{{this.id}}" {{#if (eq ../motorista_id this.id)}}selected{{/if}}>{{this.nome}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="status-{{this.id}}" class="form-label">Status:</label>
+                                                <select id="status-{{this.id}}" name="status" class="form-control" required>
+                                                    <option value="Planejada" {{#if (eq this.status "Planejada")}}selected{{/if}}>Planejada</option>
+                                                    <option value="Em Andamento" {{#if (eq this.status "Em Andamento")}}selected{{/if}}>Em Andamento</option>
+                                                    <option value="Finalizada" {{#if (eq this.status "Finalizada")}}selected{{/if}}>Finalizada</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">Salvar Alterações</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+    <!-- Incluir o JS do Bootstrap e suas dependências -->
     <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

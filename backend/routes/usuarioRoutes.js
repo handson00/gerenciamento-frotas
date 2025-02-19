@@ -1,24 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
-const { ensureAuthenticated } = require('../middleware/auth');
 
-// Exibir todos os usuários
-router.get('/', ensureAuthenticated, usuarioController.listarUsuarios);
+// Rota para listar usuários
+router.get('/', usuarioController.listarUsuarios);
 
-// Página de cadastro de usuário
-router.get('/cadastrar', usuarioController.cadastrarUsuario);
+// Rota para a página de cadastro de usuário
+router.get('/cadastrar', (req, res) => {
+    res.render('cadastrarUsuario');
+});
 
-// Cadastrar novo usuário
-router.post('/cadastrar', usuarioController.salvarUsuario);
+// Rota para cadastrar um usuário
+router.post('/cadastrar', usuarioController.cadastrarUsuario);
 
-// Página de edição de usuário
-router.get('/editar/:id', ensureAuthenticated, usuarioController.editarUsuario);
-
-// Editar usuário
-router.post('/editar/:id', ensureAuthenticated, usuarioController.atualizarUsuario);
-
-// Excluir usuário
-router.post('/excluir/:id', ensureAuthenticated, usuarioController.excluirUsuario);
+// Rota para excluir um usuário
+router.post('/excluir/:id', usuarioController.excluirUsuario);
 
 module.exports = router;

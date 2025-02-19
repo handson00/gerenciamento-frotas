@@ -1,24 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const motoristaController = require('../controllers/motoristaController');
-const { ensureAuthenticated } = require('../middleware/auth');
 
-// Exibir todos os motoristas
-router.get('/', ensureAuthenticated, motoristaController.listarMotoristas);
+// Rota para listar motoristas
+router.get('/', motoristaController.listarMotoristas);
 
-// Página de cadastro de motorista
-router.get('/cadastrar', ensureAuthenticated, motoristaController.cadastrarMotorista);
+// Rota para cadastrar motorista
+router.post('/', motoristaController.cadastrarMotorista);
 
-// Cadastrar novo motorista
-router.post('/cadastrar', ensureAuthenticated, motoristaController.salvarMotorista);
+// Rota para editar motorista
+router.post('/editar/:id', motoristaController.editarMotorista);
 
-// Página de edição de motorista
-router.get('/editar/:id', ensureAuthenticated, motoristaController.editarMotorista);
-
-// Editar motorista
-router.post('/editar/:id', ensureAuthenticated, motoristaController.atualizarMotorista);
-
-// Excluir motorista
-router.post('/excluir/:id', ensureAuthenticated, motoristaController.excluirMotorista);
+// Rota para excluir motorista
+router.post('/excluir/:id', motoristaController.excluirMotorista);
 
 module.exports = router;
